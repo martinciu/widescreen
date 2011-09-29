@@ -3,6 +3,7 @@ require 'redis/namespace'
 require 'widescreen/version'
 require 'widescreen/metric'
 require 'widescreen/stat'
+require 'widescreen/interval'
 
 module Widescreen
   SEPARATOR = "|"

@@ -12,10 +12,10 @@ describe Widescreen::Metric do
         Widescreen::Metric.new("foo").name.must_equal "foo"
       end
       it "set interval " do
-        Widescreen::Metric.new("foo", "hour").interval.must_equal "hour"
+        Widescreen::Metric.new("foo", "minute").interval.must_be_instance_of Widescreen::Interval::Minute
       end
       it "set default interval " do
-        Widescreen::Metric.new("foo").interval.must_equal Widescreen::Metric::DEFAULT_INTERVAL
+        Widescreen::Metric.new("foo").interval.must_be_instance_of Widescreen::Interval::Hour
       end
     end
 

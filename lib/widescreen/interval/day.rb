@@ -1,10 +1,10 @@
 module Widescreen
   module Interval
-    class Hour
+    class Day
       include Interval
       
       def key(time)
-        time.strftime('%Y-%m-%dT%H')
+        time.strftime('%Y-%m-%d')
       end
     end
   end

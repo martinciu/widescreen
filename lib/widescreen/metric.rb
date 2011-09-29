@@ -1,13 +1,13 @@
 module Widescreen
   class Metric
-    DEFAULT_INTERVAL = "minute"
+    DEFAULT_INTERVAL = "hour"
     attr_accessor :name, :interval
     
     INTERVALS = %w(day hour minute second)
     
-    def initialize(name, interval = nil)
-      @interval = interval || DEFAULT_INTERVAL
-      @name = name
+    def initialize(name, interval_name = nil)
+      @interval = get_interval(interval_name)
+      @name     = name
     end
     
     def new_record?
@@ -17,12 +17,12 @@ module Widescreen
     def save
       return false unless valid?
       Widescreen.redis.sadd(:metrics, name) if new_record?
-      Widescreen.redis.set([:metrics, name].join(Widescreen::SEPARATOR), interval)
+      Widescreen.redis.set([:metrics, name].join(Widescreen::SEPARATOR), interval.name)
       true
     end
     
     def valid?
-      !name.empty? && INTERVALS.include?(interval)
+      !name.empty? && !interval.nil? && INTERVALS.include?(interval.name)
     end
     
     def push(value)
@@ -34,7 +34,7 @@ module Widescreen
     end
     
     def time_key(time)
-      time.strftime('%Y-%m-%dT%H')
+      interval.key(time)
     end
       
     def self.find(name)
@@ -50,6 +50,14 @@ module Widescreen
       metric.save
       metric
     end
-
+    
+    protected
+      def get_interval(interval_name)
+        interval_name    = interval_name || DEFAULT_INTERVAL
+        interval_name[0] = interval_name[0].upcase
+        Object.module_eval("Widescreen::Interval::#{interval_name}", __FILE__, __LINE__).new
+      rescue
+        nil
+      end
   end
 end

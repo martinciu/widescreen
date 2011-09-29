@@ -9,7 +9,7 @@ module Widescreen
     end
 
     def save
-      Widescreen.redis.incrby(key, @value)
+      Widescreen.redis.incrby(key, value)
     end
 
     def self.add(metric_name, value = 1)
@@ -25,11 +25,11 @@ module Widescreen
 
     protected
       def key
-        [@metric.name, @time].join(Widescreen::SEPARATOR)
+        [metric.name, time].join(Widescreen::SEPARATOR)
       end
       
       def compute_time(time)
-        time.is_a?(String) ? time : @metric.time_key(time)
+        time.is_a?(String) ? time : metric.time_key(time)
       end
 
   end
