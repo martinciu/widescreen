@@ -1,8 +1,12 @@
 module Widescreen
   class Metric
-    attr_accessor :name
+    DEFAULT_INTERVAL = "minute"
+    attr_accessor :name, :interval
     
-    def initialize(name)
+    INTERVALS = %w(day hour minute second)
+    
+    def initialize(name, interval = nil)
+      @interval = interval || DEFAULT_INTERVAL
       @name = name
     end
     
@@ -11,9 +15,14 @@ module Widescreen
     end
 
     def save
-      if new_record?
-        Widescreen.redis.sadd(:metrics, name)
-      end
+      return false unless valid?
+      Widescreen.redis.sadd(:metrics, name) if new_record?
+      Widescreen.redis.set([:metrics, name].join(Widescreen::SEPARATOR), interval)
+      true
+    end
+    
+    def valid?
+      !name.empty? && INTERVALS.include?(interval)
     end
     
     def push(value)
@@ -21,19 +30,19 @@ module Widescreen
     end
     
     def stats
-      Widescreen.redis.keys("#{name}|*").map { |s| Widescreen::Stat.find(s) }
+      Widescreen.redis.keys("#{name}#{Widescreen::SEPARATOR}*").map { |s| Widescreen::Stat.find(s) }
     end
     
     def self.find(name)
-      new(name)
+      new(name, Widescreen.redis.get([:metrics, name].join(Widescreen::SEPARATOR))) if Widescreen.redis.sismember(:metrics, name)
     end
     
     def self.all
       Widescreen.redis.smembers(:metrics).map {|m| find(m)}
     end
 
-    def self.create(name)
-      metric = new(name)
+    def self.create(name, interval = nil)
+      metric = new(name, interval)
       metric.save
       metric
     end

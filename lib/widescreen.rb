@@ -5,6 +5,8 @@ require 'widescreen/metric'
 require 'widescreen/stat'
 
 module Widescreen
+  SEPARATOR = "|"
+  
   extend self
 
   # Accepts:

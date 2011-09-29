@@ -27,7 +27,7 @@ describe Widescreen::Stat do
     
     describe "find" do
       before(:each) do
-        @key = ["foo", Time.now.strftime('%Y-%m-%dT%H')].join(Widescreen::Stat::SEPARATOR)
+        @key = ["foo", Time.now.strftime('%Y-%m-%dT%H')].join(Widescreen::SEPARATOR)
         Widescreen.redis.set(@key, 10)
       end
       
@@ -48,7 +48,7 @@ describe Widescreen::Stat do
         Timecop.freeze
         @time = Time.now.strftime('%Y-%m-%dT%H')
         @metric_name = "foo"
-        @key = [@metric_name, @time].join(Widescreen::Stat::SEPARATOR)
+        @key = [@metric_name, @time].join(Widescreen::SEPARATOR)
       end
 
       after(:each) do
