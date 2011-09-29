@@ -18,10 +18,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.platform     = Gem::Platform::RUBY
 
-  s.add_dependency 'redis',           '~> 2.1'
+  s.add_dependency 'redis',           '~> 2.2.2'
   s.add_dependency 'redis-namespace', '~> 1.0.3'
-  s.add_development_dependency 'minitest', '~> 2.6'
+  s.add_development_dependency 'minitest', '~> 2.6.1'
   s.add_development_dependency 'timecop', '~> 0.3.5'
-  s.add_development_dependency 'rake'
 
 end
