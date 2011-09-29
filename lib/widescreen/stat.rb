@@ -1,22 +1,36 @@
 module Widescreen
   class Stat
-    attr_accessor :metric_name, :time, :value
-    
+    attr_accessor :metric, :time, :value
+
     def initialize(metric_name, time, value = 1)
-      @metric_name = metric_name
-      @time        = time
-      @value       = value
+      @metric = Widescreen::Metric.find(metric_name)
+      @time   = compute_time(time)
+      @value  = value
     end
-    
+
+    def save
+      Widescreen.redis.incrby(key, @value)
+    end
+
     def self.add(metric_name, value = 1)
-      Widescreen.redis.incrby([metric_name, Time.now.strftime('%Y-%m-%dT%H')].join(Widescreen::SEPARATOR), value)
+      new(metric_name, Time.now, value).save
     end
     
     def self.find(key)
-      metric_name, time = key.split(Widescreen::SEPARATOR, 2)
       value = Widescreen.redis.get(key)
-      value ? new(metric_name, time, value) : nil
+      return if value.nil?
+      metric_name, time = key.split(Widescreen::SEPARATOR, 2)
+      new(metric_name, time, value)
     end
-    
+
+    protected
+      def key
+        [@metric.name, @time].join(Widescreen::SEPARATOR)
+      end
+      
+      def compute_time(time)
+        time.is_a?(String) ? time : @metric.time_key(time)
+      end
+
   end
 end

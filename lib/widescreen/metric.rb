@@ -33,6 +33,10 @@ module Widescreen
       Widescreen.redis.keys("#{name}#{Widescreen::SEPARATOR}*").map { |s| Widescreen::Stat.find(s) }
     end
     
+    def time_key(time)
+      time.strftime('%Y-%m-%dT%H')
+    end
+      
     def self.find(name)
       new(name, Widescreen.redis.get([:metrics, name].join(Widescreen::SEPARATOR))) if Widescreen.redis.sismember(:metrics, name)
     end

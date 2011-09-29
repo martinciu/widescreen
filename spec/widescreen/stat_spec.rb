@@ -8,12 +8,13 @@ describe Widescreen::Stat do
   describe "instance methods" do
     describe "initialize" do
       before(:each) do
+        @metric = Widescreen::Metric.create("foo")
         @time = Time.now.strftime('%Y-%m-%dT%H')
         @stat = Widescreen::Stat.new("foo", @time, 5)
       end
       
-      it "has metric_name" do
-        @stat.metric_name.must_equal "foo"
+      it "has metric" do
+        @stat.metric.must_be_instance_of Widescreen::Metric
       end
       
       it "has time" do
@@ -48,6 +49,7 @@ describe Widescreen::Stat do
         Timecop.freeze
         @time = Time.now.strftime('%Y-%m-%dT%H')
         @metric_name = "foo"
+        Widescreen::Metric.create(@metric_name)
         @key = [@metric_name, @time].join(Widescreen::SEPARATOR)
       end
 
