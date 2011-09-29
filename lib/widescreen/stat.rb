@@ -2,8 +2,8 @@ module Widescreen
   class Stat
     attr_accessor :metric, :time, :value
 
-    def initialize(metric_name, time, value = 1)
-      @metric = Widescreen::Metric.find(metric_name)
+    def initialize(metric, time, value = 1)
+      @metric = metric.is_a?(Widescreen::Metric) ? metric : Widescreen::Metric.find(metric)
       @time   = compute_time(time)
       @value  = value
     end
@@ -12,8 +12,8 @@ module Widescreen
       Widescreen.redis.incrby(key, value)
     end
 
-    def self.add(metric_name, value = 1)
-      new(metric_name, Time.now, value).save
+    def self.add(metric, value = 1)
+      new(metric, Time.now, value).save
     end
     
     def self.find(key)

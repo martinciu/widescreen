@@ -26,7 +26,7 @@ module Widescreen
     end
     
     def push(value)
-      Stat.add(name, value)
+      Widescreen::Stat.add(self, value)
     end
     
     def stats
