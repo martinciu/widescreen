@@ -1,4 +1,4 @@
-# Widescreen
+# Widescreen[![travis-ci](https://secure.travis-ci.org/martinciu/widescreen.png?branch=master)](http://travis-ci.org/martinciu/widescreen)
 Rack based event statistic framework for any Rack app
 
 ## Requirements
