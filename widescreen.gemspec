@@ -9,9 +9,8 @@ Gem::Specification.new do |s|
   s.authors      = ["Marcin Ciunelis"]
   s.email        = "marcin.ciunelis@gmail.com"
   s.homepage     = "http://github.com/martinciu/widescreen"
-  s.summary      = "[summary]"
-  s.description  = "[description]"
-
+  s.summary      = "Rack based event statistic framework for any Rack app"
+ 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
