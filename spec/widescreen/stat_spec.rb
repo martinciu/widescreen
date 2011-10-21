@@ -8,8 +8,9 @@ describe Widescreen::Stat do
   describe "instance methods" do
     describe "initialize" do
       before(:each) do
+        Timecop.freeze
         @metric = Widescreen::Metric.create("foo")
-        @time = Time.now.strftime('%Y-%m-%dT%H')
+        @time = Time.now.to_i.to_s
         @stat = Widescreen::Stat.new("foo", @time, 5)
       end
       
@@ -47,10 +48,10 @@ describe Widescreen::Stat do
     describe "add" do
       before(:each) do
         Timecop.freeze
-        @time = Time.now.strftime('%Y-%m-%dT%H')
+        @time = Time.now
         @metric_name = "foo"
         Widescreen::Metric.create(@metric_name)
-        @key = [@metric_name, @time].join(Widescreen::SEPARATOR)
+        @key = [@metric_name, @time.to_i].join(Widescreen::SEPARATOR)
       end
 
       after(:each) do

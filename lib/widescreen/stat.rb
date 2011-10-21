@@ -3,8 +3,8 @@ module Widescreen
     attr_accessor :metric, :time, :value
 
     def initialize(metric, time, value = 1)
-      @metric = process_metric(metric)
-      @time   = process_time(time)
+      @metric = Widescreen::Metric.find_or_create(metric)
+      @time   = time.to_i.to_s
       @value  = value
     end
 
@@ -28,13 +28,5 @@ module Widescreen
         [metric.name, time].join(Widescreen::SEPARATOR)
       end
       
-      def process_time(time)
-        time.is_a?(String) ? time : metric.time_key(time)
-      end
-      
-      def process_metric(metric)
-        metric.is_a?(Widescreen::Metric) ? metric : Widescreen::Metric.find(metric)
-      end
-
   end
 end

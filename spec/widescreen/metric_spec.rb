@@ -11,12 +11,6 @@ describe Widescreen::Metric do
       it "set name" do
         Widescreen::Metric.new("foo").name.must_equal "foo"
       end
-      it "set interval " do
-        Widescreen::Metric.new("foo", "minute").interval.must_be_instance_of Widescreen::Interval::Minute
-      end
-      it "set default interval " do
-        Widescreen::Metric.new("foo").interval.must_be_instance_of Widescreen::Interval::Hour
-      end
     end
 
     describe "save" do
@@ -38,9 +32,6 @@ describe Widescreen::Metric do
       end
       it "returns false if name is empty" do
         Widescreen::Metric.new("").valid?.must_equal false
-      end
-      it "returns false if interval is incorrect " do
-        Widescreen::Metric.new("foo", "bar").valid?.must_equal false
       end
     end
 
