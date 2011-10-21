@@ -4,6 +4,7 @@ require 'time'
 require 'widescreen/version'
 require 'widescreen/metric'
 require 'widescreen/stat'
+require 'widescreen/dashboard'
 
 module Widescreen
   SEPARATOR = "|"
@@ -45,4 +46,14 @@ module Widescreen
     self.redis = Redis.respond_to?(:connect) ? Redis.connect : "localhost:6379"
     self.redis
   end
+
+  def redis_id
+    # support 1.x versions of redis-rb
+    if redis.respond_to?(:server)
+      redis.server
+    else
+      redis.client.id
+    end
+  end
+
 end

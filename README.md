@@ -46,7 +46,27 @@ to increase it by 1
 
 ## Web Interface
 
-Web interface is on to-do list. It will be simple sinatra app similar to Resque web interface
+Widescreen comes with a Sinatra-based front end to get an overview of how your experiments are doing.
+
+If you are running Rails 2: You can mount this inside your app using Rack::URLMap in your `config.ru    `
+
+    require 'widescreen/dashboard'
+
+    run Rack::URLMap.new \
+      "/"           => Your::App.new,
+      "/widescreen" => Widescreen::Dashboard.new
+
+However, if you are using Rails 3: You can mount this inside your app routes by first adding this to config/routes.rb
+
+    mount Widescreen::Dashboard, :at => 'widescreen'
+
+You may want to password protect that page, you can do so with `Rack::Auth::Basic`
+
+    Widescreen::Dashboard.use Rack::Auth::Basic do |username, password|
+      username == 'admin' && password == 'p4s5w0rd'
+    end
+
+Dashboard is inspirated by [Resque](https://github.com/defunkt/resque) and [Split](https://github.com/andrew/split)
 
 ## Configuration
 

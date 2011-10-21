@@ -1,0 +1,10 @@
+<h1>Available Metrics</h1>
+<table class='stats'>
+<% for metric in @metrics %>
+  <tr>
+    <td>
+      <a href="<%= url "metrics/#{metric.name}" %>"><%= metric.name %></a>
+    </td>
+  </tr>
+<% end %>
+</table>

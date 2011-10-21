@@ -1,0 +1,13 @@
+<h1><%= @metric.name %></h1>
+<table class='stats'>
+<% for stat in @metric.stats %>
+  <tr>
+    <th>
+      <%= stat.time %>
+    </th>
+    <td>
+      <%= stat.value %>
+    </td>
+  </tr>
+<% end %>
+</table>

@@ -1,0 +1,178 @@
+<head>
+<style>
+body {
+  font-family: georgia, arial, helvetica;
+  padding: 1em;
+}
+p {
+  max-width: 40em;
+}
+h1 {
+  background-color: #f1f1fd;
+  border-bottom: 1px solid blue;
+  padding: .25em 1em;
+  margin: 1em -1em .25em;
+}
+</style>
+</head>
+<body>
+  <h1>Widescreen<a href="http://travis-ci.org/martinciu/widescreen"><img src="https://secure.travis-ci.org/martinciu/widescreen.png?branch=master" alt="travis-ci" /></a></h1>
+
+<p>Rack based event statistic framework for any Rack app</p>
+
+<h2>Requirements</h2>
+
+<p>Widescreen uses redis as a datastore.</p>
+
+<p>Widescreen only supports redis 2.0 or greater.</p>
+
+<p>If you're on OS X, Homebrew is the simplest way to install Redis:</p>
+
+<pre><code>$ brew install redis
+$ redis-server /usr/local/etc/redis.conf
+</code></pre>
+
+<p>You now have a Redis daemon running on 6379.</p>
+
+<h2>Setup</h2>
+
+<p>If you are using bundler add widescreen to your Gemfile:</p>
+
+<pre><code>gem 'widescreen'
+</code></pre>
+
+<p>Then run:</p>
+
+<pre><code>bundle install
+</code></pre>
+
+<p>Otherwise install the gem:</p>
+
+<pre><code>gem install widescreen
+</code></pre>
+
+<p>and require it in your project:</p>
+
+<pre><code>require 'widescreen'
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Anywhere in you code call</p>
+
+<pre><code>Widescreen::Stat.add(:metric_name, 10)
+</code></pre>
+
+<p>to increase counter by 10 for <code>metric_name</code> metric or</p>
+
+<pre><code>Widescreen::Stat.add(:metric_name)
+</code></pre>
+
+<p>to increase it by 1</p>
+
+<h2>Web Interface</h2>
+
+<p>Widescreen comes with a Sinatra-based front end to get an overview of how your experiments are doing.</p>
+
+<p>If you are running Rails 2: You can mount this inside your app using Rack::URLMap in your <code>config.ru   </code></p>
+
+<pre><code>require 'widescreen/dashboard'
+
+run Rack::URLMap.new \
+  "/"           =&gt; Your::App.new,
+  "/widescreen" =&gt; Widescreen::Dashboard.new
+</code></pre>
+
+<p>However, if you are using Rails 3: You can mount this inside your app routes by first adding this to config/routes.rb</p>
+
+<pre><code>mount Widescreen::Dashboard, :at =&gt; 'widescreen'
+</code></pre>
+
+<p>You may want to password protect that page, you can do so with <code>Rack::Auth::Basic</code></p>
+
+<pre><code>Widescreen::Dashboard.use Rack::Auth::Basic do |username, password|
+  username == 'admin' &amp;&amp; password == 'p4s5w0rd'
+end
+</code></pre>
+
+<p>Dashboard is heavely inspirated by <a href="https://github.com/defunkt/resque">Resque</a> and <a href="https://github.com/andrew/split">Split</a></p>
+
+<h2>Configuration</h2>
+
+<h3>Redis</h3>
+
+<p>You may want to change the Redis host and port Wide connects to, or
+set various other options at startup.</p>
+
+<p>Widescreen has a <code>redis</code> setter which can be given a string or a Redis
+object. This means if you're already using Redis in your app, Widescreen
+can re-use the existing connection.</p>
+
+<p>String: <code>Widescreen.redis = 'localhost:6379'</code></p>
+
+<p>Redis: <code>Widescreen.redis = $redis</code></p>
+
+<p>For our rails app we have a <code>config/initializers/widescreen.rb</code> file where
+we load <code>config/widescreen.yml</code> by hand and set the Redis information
+appropriately.</p>
+
+<p>Here's our <code>config/widescreen.yml</code>:</p>
+
+<pre><code>development: localhost:6379
+test: localhost:6379
+staging: redis1.example.com:6379
+fi: localhost:6379
+production: redis1.example.com:6379
+</code></pre>
+
+<p>And our initializer:</p>
+
+<pre><code>rails_root = ENV['RAILS_ROOT'] || File.dirname(__FILE__) + '/../..'
+rails_env = ENV['RAILS_ENV'] || 'development'
+
+widescreen_config = YAML.load_file(rails_root + '/config/widescreen.yml')
+Widescreen.redis = widescreen_config[rails_env]
+</code></pre>
+
+<h2>Namespaces</h2>
+
+<p>If you're running multiple, separate instances of widescreen you may want
+to namespace the keyspaces so they do not overlap. This is not unlike
+the approach taken by many memcached clients.</p>
+
+<p>This feature is provided by the [redis-namespace][rs] library, which
+widescreen uses by default to separate the keys it manages from other keys
+in your Redis server.</p>
+
+<p>Simply use the <code>Widescreen.redis.namespace</code> accessor:</p>
+
+<pre><code>Widescreen.redis.namespace = "widescreen:blog"
+</code></pre>
+
+<p>We recommend sticking this in your initializer somewhere after Redis
+is configured.</p>
+
+<h2>Development</h2>
+
+<p>Source hosted at <a href="http://github.com/martinciu/widescreen">GitHub</a>.
+Report Issues/Feature requests on <a href="http://github.com/martinciu/widescreen/issues">GitHub Issues</a>.</p>
+
+<p>Tests can be ran with <code>rake test</code></p>
+
+<h3>Note on Patches/Pull Requests</h3>
+
+<ul>
+<li>Fork the project.</li>
+<li>Make your feature addition or bug fix.</li>
+<li>Add tests for it. This is important so I don't break it in a
+future version unintentionally.</li>
+<li>Commit, do not mess with rakefile, version, or history.
+(if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)</li>
+<li>Send me a pull request. Bonus points for topic branches.</li>
+</ul>
+
+
+<h2>Copyright</h2>
+
+<p>Copyright (c) 2011 Marcin Ciunelis. See <a href="https://github.com/martinciu/widescreen/blob/master/LICENSE">LICENSE</a> for details.</p>
+

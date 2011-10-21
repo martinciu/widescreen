@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Widecreen</title>
+  <link href="<%=url 'reset.css' %>" media="screen" rel="stylesheet" type="text/css">
+  <link href="<%=url 'style.css' %>" media="screen" rel="stylesheet" type="text/css">
+</head>
+<body>
+  <div class="header">
+    <ul class='nav'>
+      <li class="current"><a href="<%= url '/' %>">Metrics</a></li>
+    </ul>
+    <abbr class="namespace" title="Widescreen's Redis Namespace">
+     <%= Widescreen.redis.namespace %>
+    </abbr>
+  </div>
+
+  <div id="main">
+    <%= yield %>
+  </div>
+
+  <div id="footer">
+    <p>Powered by <a href="http://github.com/martinciu/widescreen">Widescreen</a> v<%=Widescreen::VERSION%></p>
+    <p>Connected to Redis namespace <%= Widescreen.redis.namespace %> on <%=Widescreen.redis_id%></p>
+  </div>
+
+</body>
+</html>
