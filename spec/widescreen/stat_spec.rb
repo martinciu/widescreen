@@ -10,10 +10,14 @@ describe Widescreen::Stat do
       before(:each) do
         Timecop.freeze
         @metric = Widescreen::Metric.create("foo")
-        @time = Time.now.to_i.to_s
+        @time = Time.now.iso8601
         @stat = Widescreen::Stat.new("foo", @time, 5)
       end
       
+      after(:each) do
+        Timecop.return
+      end
+
       it "has metric" do
         @stat.metric.must_be_instance_of Widescreen::Metric
       end
@@ -48,10 +52,10 @@ describe Widescreen::Stat do
     describe "add" do
       before(:each) do
         Timecop.freeze
-        @time = Time.now
+        @time = Time.now.iso8601
         @metric_name = "foo"
         Widescreen::Metric.create(@metric_name)
-        @key = [@metric_name, @time.to_i].join(Widescreen::SEPARATOR)
+        @key = [@metric_name, @time].join(Widescreen::SEPARATOR)
       end
 
       after(:each) do

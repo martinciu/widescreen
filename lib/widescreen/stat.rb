@@ -4,7 +4,7 @@ module Widescreen
 
     def initialize(metric, time, value = 1)
       @metric = Widescreen::Metric.find_or_create(metric)
-      @time   = time.to_i.to_s
+      @time   = time
       @value  = value
     end
 
@@ -20,12 +20,18 @@ module Widescreen
       value = Widescreen.redis.get(key)
       return if value.nil?
       metric_name, time = key.split(Widescreen::SEPARATOR, 2)
-      new(metric_name, time, value)
+      new(metric_name, Time.parse(time), value)
     end
 
     protected
       def key
-        [metric.name, time].join(Widescreen::SEPARATOR)
+        [metric.name, time_string].join(Widescreen::SEPARATOR)
+      end
+
+      def time_string
+        time.iso8601
+      rescue NoMethodError
+        time
       end
       
   end

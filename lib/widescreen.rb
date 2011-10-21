@@ -1,4 +1,5 @@
 require 'redis/namespace'
+require 'time'
 
 require 'widescreen/version'
 require 'widescreen/metric'
