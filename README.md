@@ -105,7 +105,7 @@ is configured.
 Source hosted at [GitHub](http://github.com/martinciu/widescreen).
 Report Issues/Feature requests on [GitHub Issues](http://github.com/martinciu/widescreen/issues).
 
-Tests can be ran with `rake spec`
+Tests can be ran with `rake test`
 
 ### Note on Patches/Pull Requests
 
