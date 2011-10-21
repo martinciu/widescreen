@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'redis',           '~> 2.2.2'
   s.add_dependency 'redis-namespace', '~> 1.0.3'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'minitest', '~> 2.6.1'
   s.add_development_dependency 'timecop', '~> 0.3.5'
 
