@@ -9,7 +9,7 @@ describe Widescreen::Dashboard do
 
   before(:each) do
     Widescreen.redis.flushall
-    Widescreen::Stat.add('foo', 10)
+    Widescreen::Stat.add('foo/bar', 10)
   end
 
   it "should respond to /" do
@@ -18,7 +18,7 @@ describe Widescreen::Dashboard do
   end
 
   it "should respond to /metrics/foo" do
-    get '/metrics/foo'
+    get '/metrics/foo/bar'
     last_response.ok?.must_equal true
   end
 

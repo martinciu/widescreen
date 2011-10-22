@@ -24,8 +24,8 @@ module Widescreen
       erb :metrics
     end
 
-    get '/metrics/:name' do
-      @metric = Widescreen::Metric.find(params[:name])
+    get '/metrics/*' do |name|
+      @metric = Widescreen::Metric.find(name)
       erb :metric
     end
 
