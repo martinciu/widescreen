@@ -24,8 +24,17 @@ module Widescreen
       erb :metrics
     end
 
-    get '/metrics/*' do |name|
-      @metric = Widescreen::Metric.find(name)
+    get '/rename' do
+      Widescreen::Metric.all.each do |metric|
+        Widescreen.redis.keys("#{metric.name}|*").each do |key|
+          Widescreen.redis.rename(key, key.gsub("|", ':'))
+        end
+      end
+      redirect '/'
+    end
+
+    get '/metrics/*' do |name_and_filter|
+      @metric = Widescreen::Metric.find(name_and_filter)
       erb :metric
     end
 

@@ -1,9 +1,10 @@
 module Widescreen
   class Metric
-    attr_accessor :name
+    attr_accessor :name, :filter
     
-    def initialize(name)
-      @name     = name
+    def initialize(name_and_filter)
+      @name, @filter = name_and_filter.split(Widescreen::SEPARATOR, 2)
+      @filter = "#{@filter}*"
     end
     
     def new_record?
@@ -17,7 +18,7 @@ module Widescreen
     end
     
     def valid?
-      !name.empty?
+      !name.nil? && !name.empty?
     end
     
     def push(value)
@@ -25,7 +26,7 @@ module Widescreen
     end
     
     def stats
-      Widescreen.redis.keys("#{name}#{Widescreen::SEPARATOR}*").map { |s| Widescreen::Stat.find(s) }
+      Widescreen.redis.keys([name, filter].join(Widescreen::SEPARATOR)).map { |s| Widescreen::Stat.find(s) }
     end
     
     def self.find(name)

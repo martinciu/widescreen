@@ -7,7 +7,7 @@ require 'widescreen/stat'
 require 'widescreen/dashboard'
 
 module Widescreen
-  SEPARATOR = "|"
+  SEPARATOR = ":"
   
   extend self
 
