@@ -1,14 +1,28 @@
 <h1><%= @metric.name %></h1>
 <h2><%= @metric.filter %></h2>
-<table class='stats'>
-<% for stat in @metric.stats %>
-  <tr>
-    <th>
-      <%= stat.time %>
-    </th>
-    <td>
-      <%= stat.value %>
-    </td>
-  </tr>
-<% end %>
-</table>
+<h3>&sum;<%= @metric.stats.inject(0) {|sum, stat| sum + stat.value.to_i} %> 
+<div id="chart"></div> 
+<script type="text/javascript">
+$(document).ready(function(){
+  var line=[<%=@metric.stats.map {|stat| "['#{stat.time}', #{stat.value}]"}.join(",")%>]
+  var plot = $.jqplot('chart', [line], {
+      axes:{
+        xaxis:{
+          renderer:$.jqplot.DateAxisRenderer,
+          tickOptions:{
+             formatString:'%b&nbsp;%#d'
+          } 
+        },
+        yaxis:{
+          // tickOptions:{
+          //   formatString:'%.2f'
+          // }
+        }
+      },
+      highlighter: {
+        show: true,
+        sizeAdjust: 7.5
+      }
+  });
+});
+</script>
